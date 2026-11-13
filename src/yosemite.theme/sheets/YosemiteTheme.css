@@ -977,3 +977,20 @@ a.info span,
 .move_to_end {
     border-radius: 999px;
 }
+
+/* ------------------------------------------------------------------ */
+/* 19. User pictures                                                   */
+/* ------------------------------------------------------------------ */
+/*
+ * Unraid re-encodes an uploaded user picture and drops its alpha channel,
+ * so see-through areas come out black. Custom pictures are shown as circles
+ * (as OS X does), which hides the black corners of a round avatar. The stock
+ * silhouette is left alone.
+ */
+img.picture[src*="/dynamix/users/"],
+img#image[src*="/dynamix/users/"] {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
