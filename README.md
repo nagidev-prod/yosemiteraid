@@ -1,6 +1,6 @@
 # Yosemite for Unraid
 
-An OS X 10.10 "Yosemite" inspired skin for the Unraid web UI: Helvetica Neue,
+An OS X 10.10 "Yosemite" inspired skin for the Unraid web UI: the system font,
 a gradient title bar with traffic lights, aqua-blue buttons and pop-up menus,
 segmented tabs, Finder-style striped tables and a translucent sidebar.
 
@@ -63,8 +63,8 @@ two gradient stops to move away from aqua blue.
 
 ## Notes
 
-- Helvetica Neue is used when the computer you browse from has it (any Mac).
-  Elsewhere it falls back to Helvetica, Arial, then Unraid's own font.
+- Text uses the system font of the device you browse from: San Francisco on a
+  Mac or iPhone, Segoe UI on Windows, Roboto on Android. Nothing is downloaded.
 - The header's logo and profile menu are Unraid's Vue components and are
   mostly left as they are; only their text colours are set.
 - A custom header colour or banner set in Display Settings still wins over

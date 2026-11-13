@@ -14,8 +14,14 @@
  */
 
 /* ------------------------------------------------------------------ */
-/* 1. Typeface: remap Unraid's "clear-sans" to Helvetica Neue          */
+/* 1. Typeface                                                         */
 /* ------------------------------------------------------------------ */
+/*
+ * Text uses the system font (San Francisco on current macOS and iOS) through
+ * --yos-font further down. Browsers do not expose San Francisco to @font-face,
+ * so the remap below sends any leftover hardcoded "clear-sans" (plugin pages
+ * mostly) to Helvetica Neue as the nearest match.
+ */
 @font-face { font-family: clear-sans; font-weight: normal; font-style: normal;
     src: local("Helvetica Neue"), local("HelveticaNeue"), local("Helvetica"), local("Arial"),
          url("/webGui/styles/clear-sans.woff") format("woff"); }
@@ -33,7 +39,7 @@
 /* 2. Palette                                                          */
 /* ------------------------------------------------------------------ */
 :root {
-    --yos-font: "Helvetica Neue", Helvetica, clear-sans, Arial, sans-serif;
+    --yos-font: system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     --yos-accent: #1a82fb;
     --yos-accent-top: #6cb3fa;
@@ -226,6 +232,23 @@
 /* ------------------------------------------------------------------ */
 html,
 body {
+    font-family: var(--yos-font);
+}
+
+/* Places where Unraid's own sheets hardcode their font */
+:root .font-sans,
+:root .sweet-alert,
+:root pre#swalbody,
+:root ul.jqueryFileTree,
+:root .ui-dropdownchecklist-text,
+:root .ui-dialog-buttonpane .ui-dialog-buttonset button,
+:root #sb-title-inner,
+:root #sb-info-inner,
+:root label.button,
+:root table#t1,
+:root .tablesorter-header-inner,
+:root #download_button span,
+:root #remove_button span {
     font-family: var(--yos-font);
 }
 
