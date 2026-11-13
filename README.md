@@ -15,7 +15,15 @@ Unraid load it; no settings, containers or system files are changed.
 On the server (web terminal or SSH):
 
 ```bash
-git clone https://github.com/OWNER/unraid-yosemite.git /boot/config/yosemite-theme
+git clone https://github.com/nagidev-prod/yosemiteraid.git /boot/config/yosemite-theme
+bash /boot/config/yosemite-theme/install.sh
+```
+
+If `git` is not available on the server, fetch a snapshot instead (updates
+then mean repeating these two lines rather than `git pull`):
+
+```bash
+mkdir -p /boot/config/yosemite-theme && curl -L https://github.com/nagidev-prod/yosemiteraid/archive/refs/heads/main.tar.gz | tar xz --strip-components=1 -C /boot/config/yosemite-theme
 bash /boot/config/yosemite-theme/install.sh
 ```
 
@@ -59,5 +67,7 @@ two gradient stops to move away from aqua blue.
   Elsewhere it falls back to Helvetica, Arial, then Unraid's own font.
 - The header's logo and profile menu are Unraid's Vue components and are
   mostly left as they are; only their text colours are set.
+- A custom header colour or banner set in Display Settings still wins over
+  the title-bar gradient.
 - The login page is not themed.
 - Not affiliated with Lime Technology or Apple.
