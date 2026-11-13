@@ -737,6 +737,8 @@ input::-webkit-input-placeholder,
 /* ------------------------------------------------------------------ */
 /* 13. Checkboxes, radios, switches                                    */
 /* ------------------------------------------------------------------ */
+/* Pages link jquery.switchbutton.css themselves, after this sheet, so the
+   switch rules carry an extra :root to outrank it. */
 input[type="checkbox"]:where(:not(.unapi *)),
 input[type="radio"]:where(:not(.unapi *)) {
     accent-color: var(--yos-accent);
@@ -756,30 +758,30 @@ input[type="radio"]:where(:not(.unapi *)) {
     box-shadow: inset 0 0 0 1px var(--yos-accent-border), inset 0 0 0 4px var(--yos-accent), inset 0 0 0 7px #ffffff;
 }
 
-.switch-button-label {
+:root .switch-button-label {
     font-size: 1.2rem;
     letter-spacing: 0;
     text-transform: none;
     color: var(--yos-text-2);
 }
 
-.switch-button-label.on {
+:root .switch-button-label.on {
     color: var(--yos-text);
 }
 
-.switch-button-background {
+:root .switch-button-background {
     border-color: var(--yos-control-border);
     border-radius: 999px;
     background-color: var(--yos-line);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
-.switch-button-background.checked {
+:root .switch-button-background.checked {
     border-color: #3fc257;
     background-color: var(--yos-switch-on);
 }
 
-.switch-button-button {
+:root .switch-button-button {
     border-color: var(--yos-control-border);
     border-radius: 999px;
     background-color: #ffffff;
@@ -826,6 +828,11 @@ table tbody tr.warn {
 table.dashboard tr:first-child > td {
     font-size: 1.5rem;
     font-weight: 500;
+}
+
+/* App and VM entries sit directly on the tile, without a lighter box */
+:root span.outer.solid {
+    background-color: transparent;
 }
 
 table.dashboard td.stopgap {
