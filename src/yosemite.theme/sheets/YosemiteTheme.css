@@ -1,0 +1,933 @@
+/*
+ * Yosemite — an OS X 10.10 inspired skin for the Unraid 7.2+ web UI.
+ *
+ * This sheet is an overlay: it loads after Unraid's own theme file and
+ * re-points the theme variables, then restyles a handful of components.
+ * It follows whichever stock theme is selected in Settings > Display Settings:
+ *
+ *   White  -> Yosemite light, toolbar navigation
+ *   Azure  -> Yosemite light, translucent sidebar
+ *   Black  -> Yosemite dark,  toolbar navigation
+ *   Gray   -> Yosemite dark,  translucent sidebar
+ *
+ * Elements inside `.unapi` (Unraid's Vue components) are left alone on purpose.
+ */
+
+/* ------------------------------------------------------------------ */
+/* 1. Typeface: remap Unraid's "clear-sans" to Helvetica Neue          */
+/* ------------------------------------------------------------------ */
+@font-face { font-family: clear-sans; font-weight: normal; font-style: normal;
+    src: local("Helvetica Neue"), local("HelveticaNeue"), local("Helvetica"), local("Arial"),
+         url("/webGui/styles/clear-sans.woff") format("woff"); }
+@font-face { font-family: clear-sans; font-weight: bold; font-style: normal;
+    src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"), local("Helvetica Bold"), local("Arial Bold"),
+         url("/webGui/styles/clear-sans-bold.woff") format("woff"); }
+@font-face { font-family: clear-sans; font-weight: normal; font-style: italic;
+    src: local("Helvetica Neue Italic"), local("HelveticaNeue-Italic"), local("Helvetica Oblique"), local("Arial Italic"),
+         url("/webGui/styles/clear-sans-italic.woff") format("woff"); }
+@font-face { font-family: clear-sans; font-weight: bold; font-style: italic;
+    src: local("Helvetica Neue Bold Italic"), local("HelveticaNeue-BoldItalic"), local("Helvetica Bold Oblique"), local("Arial Bold Italic"),
+         url("/webGui/styles/clear-sans-bold-italic.woff") format("woff"); }
+
+/* ------------------------------------------------------------------ */
+/* 2. Palette                                                          */
+/* ------------------------------------------------------------------ */
+:root {
+    --yos-font: "Helvetica Neue", Helvetica, clear-sans, Arial, sans-serif;
+
+    --yos-accent: #1a82fb;
+    --yos-accent-top: #6cb3fa;
+    --yos-accent-bottom: #087eff;
+    --yos-accent-border: #2e7ef0;
+    --yos-accent-soft: rgba(26, 130, 251, 0.12);
+    --yos-focus-ring: 0 0 0 3px rgba(59, 153, 252, 0.55);
+
+    --yos-window: #ececec;
+    --yos-content: #ffffff;
+    --yos-stripe: #f5f5f5;
+    --yos-text: #262626;
+    --yos-text-2: #6e6e6e;
+    --yos-text-3: #a0a0a0;
+    --yos-line: #d6d6d6;
+    --yos-line-strong: #b4b4b4;
+
+    --yos-toolbar-top: #ececec;
+    --yos-toolbar-mid: #dedede;
+    --yos-toolbar-bottom: #d2d2d2;
+    --yos-toolbar-text: #3a3a3a;
+    --yos-toolbar-pressed: #6f6f6f;
+
+    --yos-sidebar: rgba(232, 232, 234, 0.78);
+    --yos-sidebar-solid: #e6e6e8;
+    --yos-sidebar-icon: #6b6b6b;
+
+    --yos-control-top: #ffffff;
+    --yos-control-bottom: #f4f4f4;
+    --yos-control-border: #c4c4c4;
+    --yos-control-border-bottom: #acacac;
+    --yos-control-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+    --yos-field: #ffffff;
+    --yos-field-border: #c3c3c3;
+
+    --yos-red: #ff5f57;
+    --yos-yellow: #ffbd2e;
+    --yos-green: #28c940;
+    --yos-switch-on: #4cd964;
+}
+
+/* Dark variant, used when the Black or Gray stock theme is selected */
+.Theme--black:root,
+.Theme--gray:root {
+    --yos-accent-soft: rgba(26, 130, 251, 0.25);
+
+    --yos-window: #2b2b2d;
+    --yos-content: #1e1e20;
+    --yos-stripe: #252527;
+    --yos-text: #e4e4e6;
+    --yos-text-2: #a2a2a6;
+    --yos-text-3: #6f6f73;
+    --yos-line: #3a3a3d;
+    --yos-line-strong: #111112;
+
+    --yos-toolbar-top: #45454a;
+    --yos-toolbar-mid: #3a3a3e;
+    --yos-toolbar-bottom: #323236;
+    --yos-toolbar-text: #dcdcde;
+    --yos-toolbar-pressed: #1a1a1c;
+
+    --yos-sidebar: rgba(40, 40, 43, 0.8);
+    --yos-sidebar-solid: #2a2a2d;
+    --yos-sidebar-icon: #a8a8ac;
+
+    --yos-control-top: #6a6a6f;
+    --yos-control-bottom: #5c5c61;
+    --yos-control-border: #2a2a2c;
+    --yos-control-border-bottom: #1d1d1f;
+    --yos-control-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    --yos-field: #151516;
+    --yos-field-border: #4a4a4e;
+}
+
+/* ------------------------------------------------------------------ */
+/* 3. Unraid theme variables, re-pointed at the palette                */
+/* ------------------------------------------------------------------ */
+:root {
+    --font-sans: var(--yos-font);
+
+    --blue-700: var(--yos-accent);
+    --blue-800: var(--yos-accent);
+
+    --text-color: var(--yos-text);
+    --blockquote-text-color: var(--yos-text);
+    --alt-text-color: var(--yos-text-2);
+    --disabled-text-color: var(--yos-text-3);
+    --inverse-text-color: var(--yos-toolbar-text);
+    --link-text-color: var(--yos-accent);
+
+    --background-color: var(--yos-content);
+    --alt-background-color: var(--yos-sidebar);
+    --opac-background-color: var(--yos-content);
+    --mild-background-color: var(--yos-stripe);
+    --inverse-background-color: var(--yos-text);
+    --radio-background-color: var(--yos-line);
+    --disabled-input-background-color: var(--yos-stripe);
+    --shade-bg-color: var(--yos-stripe);
+
+    --usage-bar-background-color: var(--yos-line);
+    --usage-bar-used-background-color: var(--yos-accent);
+    --usage-disk-background-color: var(--yos-line);
+
+    --dashboard-background-color: var(--yos-window);
+    --dashboard-border-color: var(--yos-line);
+    --dashboard-title-action-color: transparent;
+    --dashboard-icon-color: var(--yos-text-2);
+
+    --border-color: var(--yos-line);
+    --alt-border-color: var(--yos-accent);
+    --disabled-border-color: var(--yos-line);
+    --input-border-color: var(--yos-field-border);
+    --disabled-input-border-color: var(--yos-line);
+    --textarea-border-color: var(--yos-field-border);
+    --inverse-border-color: var(--yos-line-strong);
+    --hr-color: var(--yos-line);
+
+    --table-border-color: var(--yos-line);
+    --table-alt-border-color: var(--yos-line);
+    --table-background-color: var(--yos-stripe);
+    --table-header-background-color: var(--yos-content);
+    --hover-table-row-background-color: var(--yos-accent-soft);
+
+    --footer-text: var(--yos-text-2);
+    --footer-background-color: var(--yos-window);
+
+    --small-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+
+    --checkbox-color: var(--yos-line);
+    --checkbox-hover-color: var(--yos-line-strong);
+
+    --header-text-color: var(--customer-header-text-color, var(--yos-toolbar-text));
+    --header-background-color: var(--customer-header-background-color, var(--yos-toolbar-mid));
+    --title-header-background-color: transparent;
+
+    --scrollbar-color: rgba(128, 128, 128, 0.45);
+    --scrollbar-hover-color: rgba(128, 128, 128, 0.7);
+
+    --button-border: var(--yos-control-border);
+    --button-text-color: var(--yos-text);
+    --button-background: var(--yos-control-bottom);
+    --button-background-size: cover;
+    --hover-button-border: var(--yos-accent-border);
+    --hover-button-text-color: #ffffff;
+    --hover-button-background: var(--yos-accent-bottom);
+
+    --input-bg-color: var(--yos-field);
+    --focus-input-bg-color: var(--yos-field);
+    --focus-input-background-color: var(--yos-field);
+    --focus-input-border-color: var(--yos-accent);
+
+    --dynamix-ui-dropdownchecklist-color: var(--yos-text);
+    --dynamix-ui-dropdownchecklist-color-alt1: var(--yos-content);
+    --dynamix-ui-dropdownchecklist-color-alt2: var(--yos-text-3);
+    --dynamix-ui-dropdownchecklist-dropcontainer-border-color: var(--yos-line-strong);
+    --dynamix-ui-state-active-border-color: var(--yos-accent);
+
+    --dynamix-sweet-alert-text-color: var(--yos-text);
+    --dynamix-sweet-alert-icon-bg-color: var(--yos-window);
+
+    --dynamix-tablesorter-thead-row-border-color: var(--yos-line);
+    --dynamix-tablesorter-thead-th-text-color: var(--yos-text-2);
+    --dynamix-tablesorter-thead-th-bg-color: var(--yos-content);
+    --dynamix-tablesorter-tbody-row-bg-color: var(--yos-content);
+    --dynamix-tablesorter-tbody-row-alt-bg-color: var(--yos-stripe);
+    --dynamix-tablesorter-tbody-row-border-color: transparent;
+
+    --dynamix-select-bg-color: var(--yos-field);
+    --dynamix-select-box-shadow: none;
+    --dynamix-select-disabled-bg-color: var(--yos-stripe);
+    --dynamix-select-disabled-border-color: var(--yos-line);
+    --dynamix-select-disabled-color: var(--yos-text-3);
+
+    --dynamix-box-text-color: var(--yos-text);
+}
+
+/* Text colours read by the Vue header components (logo, server name, profile) */
+:root {
+    --header-text-primary: var(--yos-toolbar-text) !important;
+    --header-text-secondary: var(--yos-text-2) !important;
+}
+
+/* The page that loads this sheet leaves an empty hook element in the nav */
+.yosemite-theme-hook {
+    display: none !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* 4. Page basics                                                      */
+/* ------------------------------------------------------------------ */
+html,
+body {
+    font-family: var(--yos-font);
+}
+
+::selection {
+    color: #ffffff;
+    background-color: var(--yos-accent);
+}
+
+::-moz-selection {
+    color: #ffffff;
+    background-color: var(--yos-accent);
+}
+
+a:where(:not(.unapi *)) {
+    color: var(--yos-accent);
+}
+
+::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. Header: a window title bar, traffic lights included              */
+/* ------------------------------------------------------------------ */
+#header {
+    min-height: 72px;
+    color: var(--header-text-color);
+    background-image: linear-gradient(to bottom, var(--yos-toolbar-top), var(--yos-toolbar-mid));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.Theme--black #header,
+.Theme--gray #header {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+#header .text-right a {
+    color: var(--header-text-color);
+}
+
+@media (min-width: 768px) {
+    #header::before {
+        content: "";
+        position: absolute;
+        top: 9px;
+        left: 12px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--yos-red);
+        box-shadow:
+            inset 0 0 0 0.5px rgba(0, 0, 0, 0.22),
+            20px 0 0 0 var(--yos-yellow),
+            40px 0 0 0 var(--yos-green);
+        pointer-events: none;
+    }
+
+    .Theme--sidebar #header::before {
+        left: 78px;
+    }
+}
+
+.Theme--sidebar #header {
+    border-bottom: 1px solid var(--yos-line-strong);
+}
+
+/* ------------------------------------------------------------------ */
+/* 6. Toolbar navigation (White / Black stock themes)                  */
+/* ------------------------------------------------------------------ */
+.Theme--nav-top #menu {
+    border-bottom: 1px solid var(--yos-line-strong);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.Theme--nav-top .nav-tile {
+    align-items: center;
+    padding: 0 0.6rem;
+    font-size: 1.3rem;
+    letter-spacing: 0;
+    background-image: linear-gradient(to bottom, var(--yos-toolbar-mid), var(--yos-toolbar-bottom));
+}
+
+.Theme--nav-top .nav-item::after,
+.Theme--nav-top .nav-user.show::after {
+    display: none;
+}
+
+.Theme--nav-top .nav-item a {
+    margin: 0 1px;
+    padding: 0 1.1rem;
+    line-height: 2.6rem;
+    border-radius: 5px;
+    color: var(--header-text-color);
+    font-weight: 500;
+    text-transform: none;
+    transition: background-color 0.12s ease-out;
+}
+
+.Theme--nav-top .nav-item a:hover,
+.Theme--nav-top .nav-item a:focus {
+    background-color: rgba(0, 0, 0, 0.09);
+}
+
+.Theme--black.Theme--nav-top .nav-item a:hover,
+.Theme--black.Theme--nav-top .nav-item a:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.Theme--nav-top .nav-item.active a {
+    color: #ffffff;
+    background-color: var(--yos-toolbar-pressed);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.Theme--nav-top .nav-user a {
+    color: var(--header-text-color);
+}
+
+/* ------------------------------------------------------------------ */
+/* 7. Sidebar navigation (Azure / Gray stock themes)                   */
+/* ------------------------------------------------------------------ */
+.Theme--sidebar #menu {
+    background-color: var(--yos-sidebar);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    backdrop-filter: saturate(180%) blur(22px);
+    border-right: 1px solid var(--yos-line-strong);
+    box-shadow: none;
+}
+
+.Theme--sidebar #nav-block {
+    color: var(--yos-text);
+}
+
+.Theme--sidebar .nav-tile {
+    letter-spacing: 0;
+}
+
+.Theme--sidebar .nav-item {
+    border-bottom: none;
+    font-size: 14px !important;
+}
+
+.Theme--sidebar .nav-item a {
+    color: var(--yos-sidebar-icon);
+    font-size: 14px;
+}
+
+.Theme--sidebar .nav-item:hover,
+.Theme--sidebar .nav-item:hover a {
+    color: var(--yos-text);
+    background: var(--yos-sidebar-solid);
+    font-size: 14px;
+    transition: none;
+}
+
+.Theme--sidebar .nav-item:hover {
+    border-radius: 0 6px 6px 0;
+    box-shadow: 0 0 0 1px var(--yos-line-strong), 4px 4px 14px rgba(0, 0, 0, 0.16);
+}
+
+.Theme--sidebar .nav-item.active,
+.Theme--sidebar .nav-item.active a,
+.Theme--sidebar .nav-item.HelpButton.active,
+.Theme--sidebar .nav-item.HelpButton.active a,
+.Theme--sidebar .nav-item.HelpButton.active:hover,
+.Theme--sidebar .nav-item.HelpButton.active a:hover {
+    color: #ffffff;
+    background: linear-gradient(to bottom, var(--yos-accent-top), var(--yos-accent-bottom));
+    font-size: 14px;
+}
+
+.Theme--sidebar .nav-user a {
+    color: var(--yos-text);
+}
+
+/* ------------------------------------------------------------------ */
+/* 8. Content area                                                     */
+/* ------------------------------------------------------------------ */
+div.title,
+.Theme--sidebar div.title {
+    margin: 2.4rem 0 1.2rem;
+    padding: 0.6rem 0.2rem;
+    color: var(--yos-text);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    background-color: transparent;
+    border-bottom: 1px solid var(--yos-line);
+}
+
+div.title:first-of-type {
+    margin-top: 0;
+}
+
+.Theme--sidebar big {
+    text-transform: none;
+}
+
+:root blockquote,
+:root blockquote.inline_help {
+    border: 1px solid var(--yos-line);
+    border-radius: 6px;
+    color: var(--yos-text);
+    background-color: var(--yos-stripe);
+}
+
+blockquote a {
+    color: var(--yos-accent);
+}
+
+blockquote a:hover,
+blockquote a:focus {
+    color: var(--yos-accent-bottom);
+}
+
+.shade {
+    border-radius: 6px;
+}
+
+pre {
+    font-family: Menlo, Monaco, "SF Mono", Consolas, monospace;
+}
+
+.PanelIcon {
+    color: var(--yos-text-2);
+}
+
+.Panel a {
+    border-radius: 6px;
+}
+
+.Panel:hover a,
+.Panel:focus a {
+    background-color: var(--yos-accent-soft);
+}
+
+.Panel:hover .PanelText,
+.Panel:focus .PanelText {
+    text-decoration: none;
+}
+
+.upgrade_notice,
+.ca_element_notice {
+    border-radius: 6px;
+    box-shadow: var(--small-shadow);
+}
+
+/* ------------------------------------------------------------------ */
+/* 9. Tabs: a segmented control                                        */
+/* ------------------------------------------------------------------ */
+.tabs-container {
+    gap: 0;
+    padding: 1px 1px 3px;
+}
+
+.tabs button[role="tab"] {
+    margin: 0 0 0 -1px;
+    padding: 0.55rem 1.6rem;
+    border: 1px solid var(--yos-control-border);
+    border-bottom-color: var(--yos-control-border-bottom);
+    border-radius: 0;
+    color: var(--yos-text);
+    font-size: 1.3rem;
+    letter-spacing: 0;
+    line-height: 1.5;
+    background-image: linear-gradient(to bottom, var(--yos-control-top), var(--yos-control-bottom));
+    box-shadow: var(--yos-control-shadow);
+    opacity: 1;
+}
+
+.tabs button[role="tab"]:first-child {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.tabs button[role="tab"]:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.tabs button[role="tab"]:hover,
+.tabs button[role="tab"]:focus {
+    color: var(--yos-text);
+    border-color: var(--yos-control-border);
+    border-bottom-color: var(--yos-control-border-bottom);
+    background-image: linear-gradient(to bottom, var(--yos-control-bottom), var(--yos-control-bottom));
+}
+
+.tabs button[role="tab"][aria-selected="true"],
+.tabs button[role="tab"][aria-selected="true"]:hover,
+.tabs button[role="tab"][aria-selected="true"]:focus {
+    position: relative;
+    color: #ffffff;
+    border-color: var(--yos-accent-border);
+    background-image: linear-gradient(to bottom, var(--yos-accent-top), var(--yos-accent-bottom));
+}
+
+.tabs button[role="tab"]:focus-visible {
+    position: relative;
+    box-shadow: var(--yos-focus-ring);
+}
+
+/* ------------------------------------------------------------------ */
+/* 10. Push buttons                                                    */
+/* ------------------------------------------------------------------ */
+:root input[type="button"]:where(:not(.unapi *)),
+:root input[type="reset"]:where(:not(.unapi *)),
+:root input[type="submit"]:where(:not(.unapi *)),
+:root button:where(:not(.unapi *, [role="tab"])),
+:root a.button:where(:not(.unapi *)) {
+    min-width: 76px;
+    padding: 0.45rem 1.4rem;
+    font-family: var(--yos-font);
+    font-size: 1.3rem;
+    font-weight: normal;
+    letter-spacing: 0;
+    line-height: 1.5;
+    text-transform: none;
+    color: var(--yos-text);
+    border: 1px solid var(--yos-control-border);
+    border-bottom-color: var(--yos-control-border-bottom);
+    border-radius: 4px;
+    background: linear-gradient(to bottom, var(--yos-control-top), var(--yos-control-bottom));
+    box-shadow: var(--yos-control-shadow);
+    transition: none;
+}
+
+:root input[type="button"]:hover:where(:not(.unapi *)),
+:root input[type="reset"]:hover:where(:not(.unapi *)),
+:root input[type="submit"]:hover:where(:not(.unapi *)),
+:root button:hover:where(:not(.unapi *, [role="tab"])),
+:root a.button:hover:where(:not(.unapi *)) {
+    color: #ffffff;
+    text-decoration: none;
+    border-color: var(--yos-accent-border);
+    background: linear-gradient(to bottom, var(--yos-accent-top), var(--yos-accent-bottom)) !important;
+}
+
+:root input[type="button"]:active:where(:not(.unapi *)),
+:root input[type="reset"]:active:where(:not(.unapi *)),
+:root input[type="submit"]:active:where(:not(.unapi *)),
+:root button:active:where(:not(.unapi *, [role="tab"])),
+:root a.button:active:where(:not(.unapi *)) {
+    color: #ffffff;
+    border-color: var(--yos-accent-border);
+    background: linear-gradient(to bottom, #4a9bf5, #0667d8) !important;
+}
+
+:root input[type="button"]:focus-visible:where(:not(.unapi *)),
+:root input[type="reset"]:focus-visible:where(:not(.unapi *)),
+:root input[type="submit"]:focus-visible:where(:not(.unapi *)),
+:root button:focus-visible:where(:not(.unapi *, [role="tab"])),
+:root a.button:focus-visible:where(:not(.unapi *)) {
+    box-shadow: var(--yos-focus-ring);
+}
+
+:root :is(input[type="button"], input[type="reset"], input[type="submit"], button, a.button)[disabled][disabled]:where(:not(.unapi *, [role="tab"])) {
+    color: var(--yos-text-3) !important;
+    border-color: var(--yos-line) !important;
+    background: var(--yos-stripe) !important;
+    box-shadow: none;
+    opacity: 1;
+    cursor: default;
+}
+
+/* ------------------------------------------------------------------ */
+/* 11. Text fields                                                     */
+/* ------------------------------------------------------------------ */
+:root input[type="text"]:where(:not(.unapi *)),
+:root input[type="password"]:where(:not(.unapi *)),
+:root input[type="number"]:where(:not(.unapi *)),
+:root input[type="url"]:where(:not(.unapi *)),
+:root input[type="email"]:where(:not(.unapi *)),
+:root input[type="date"]:where(:not(.unapi *)),
+:root input[type="file"]:where(:not(.unapi *)),
+:root textarea:where(:not(.unapi *)),
+:root .textarea:where(:not(.unapi *)) {
+    padding: 0.35rem 0.7rem;
+    font-family: var(--yos-font);
+    color: var(--yos-text);
+    border: 1px solid var(--yos-field-border);
+    border-radius: 3px;
+    background-color: var(--yos-field);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06);
+}
+
+:root input[type="text"]:focus:where(:not(.unapi *)),
+:root input[type="password"]:focus:where(:not(.unapi *)),
+:root input[type="number"]:focus:where(:not(.unapi *)),
+:root input[type="url"]:focus:where(:not(.unapi *)),
+:root input[type="email"]:focus:where(:not(.unapi *)),
+:root input[type="date"]:focus:where(:not(.unapi *)),
+:root input[type="file"]:focus:where(:not(.unapi *)),
+:root textarea:focus:where(:not(.unapi *)) {
+    border-color: var(--yos-accent);
+    background-color: var(--yos-field);
+    box-shadow: var(--yos-focus-ring);
+}
+
+:root input[disabled]:where(:not(.unapi *, [type="button"], [type="reset"], [type="submit"])),
+:root textarea[disabled]:where(:not(.unapi *)) {
+    color: var(--yos-text-3);
+    border-color: var(--yos-line);
+    background-color: var(--yos-stripe);
+    opacity: 1;
+}
+
+input::placeholder,
+input::-webkit-input-placeholder,
+.Theme--sidebar input::-webkit-input-placeholder {
+    color: var(--yos-text-3);
+}
+
+/* ------------------------------------------------------------------ */
+/* 12. Pop-up buttons (select)                                         */
+/* ------------------------------------------------------------------ */
+:root select:where(:not(.unapi *)) {
+    padding: 0.35rem 2.8rem 0.35rem 0.8rem;
+    font-family: var(--yos-font);
+    color: var(--yos-text);
+    border: 1px solid var(--yos-control-border);
+    border-bottom-color: var(--yos-control-border-bottom);
+    border-radius: 4px;
+    background-color: var(--yos-control-bottom);
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'%3E%3Cpath d='M1.2 4.6 4 1.6l2.8 3M1.2 7.4 4 10.4l2.8-3' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+        linear-gradient(to bottom, var(--yos-accent-top), var(--yos-accent-bottom)),
+        linear-gradient(to bottom, var(--yos-control-top), var(--yos-control-bottom));
+    background-position: right 5px center, right center, 0 0;
+    background-size: 8px 12px, 18px 100%, 100% 100%;
+    background-repeat: no-repeat;
+    box-shadow: var(--yos-control-shadow);
+}
+
+:root select:focus:where(:not(.unapi *)) {
+    background-color: var(--yos-control-bottom);
+}
+
+:root select:focus-visible:where(:not(.unapi *)) {
+    box-shadow: var(--yos-focus-ring);
+}
+
+:root select[disabled]:where(:not(.unapi *)) {
+    color: var(--yos-text-3);
+    border-color: var(--yos-line);
+    background-image: none;
+    background-color: var(--yos-stripe);
+    box-shadow: none;
+    opacity: 1;
+}
+
+:root select:where(:not(.unapi *)) option {
+    color: var(--yos-text);
+    background-color: var(--yos-content);
+}
+
+/* Compact selects that sit inside table headers and tool rows */
+:root select[name="enter_view"],
+:root select[name="enter_share"],
+:root select[name="port_select"] {
+    padding: 0.1rem 2.6rem 0.1rem 0.6rem;
+    border: 1px solid var(--yos-control-border);
+}
+
+/* ------------------------------------------------------------------ */
+/* 13. Checkboxes, radios, switches                                    */
+/* ------------------------------------------------------------------ */
+input[type="checkbox"]:where(:not(.unapi *)),
+input[type="radio"]:where(:not(.unapi *)) {
+    accent-color: var(--yos-accent);
+}
+
+span.checkmark {
+    box-shadow: inset 0 0 0 1px var(--yos-control-border);
+    background-color: var(--yos-control-top);
+}
+
+label.checkbox:hover input ~ .checkmark {
+    background-color: var(--yos-control-bottom);
+}
+
+label.checkbox input:checked ~ .checkmark {
+    background-color: var(--yos-accent);
+    box-shadow: inset 0 0 0 1px var(--yos-accent-border), inset 0 0 0 4px var(--yos-accent), inset 0 0 0 7px #ffffff;
+}
+
+.switch-button-label {
+    font-size: 1.2rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--yos-text-2);
+}
+
+.switch-button-label.on {
+    color: var(--yos-text);
+}
+
+.switch-button-background {
+    border-color: var(--yos-control-border);
+    border-radius: 999px;
+    background-color: var(--yos-line);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.switch-button-background.checked {
+    border-color: #3fc257;
+    background-color: var(--yos-switch-on);
+}
+
+.switch-button-button {
+    border-color: var(--yos-control-border);
+    border-radius: 999px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+/* ------------------------------------------------------------------ */
+/* 14. Tables: Finder list view                                        */
+/* ------------------------------------------------------------------ */
+table.unraid thead tr:first-child > td,
+table.tablesorter thead th {
+    font-size: 1.2rem;
+    font-weight: normal;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--yos-text-2);
+}
+
+table.unraid thead tr:last-child {
+    border-bottom: 1px solid var(--yos-line);
+}
+
+table.unraid thead td + td {
+    box-shadow: inset 1px 0 0 var(--yos-line);
+}
+
+table tbody tr.alert {
+    color: #e0342b;
+}
+
+table tbody tr.warn {
+    color: #c77700;
+}
+
+/* ------------------------------------------------------------------ */
+/* 15. Dashboard tiles                                                 */
+/* ------------------------------------------------------------------ */
+table.dashboard tbody {
+    background-color: var(--yos-content);
+    border: 1px solid var(--yos-line);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+table.dashboard tr:first-child > td {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+table.dashboard td.stopgap {
+    background-color: transparent;
+}
+
+table.dashboard td.vpn {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+table.dashboard .control {
+    border-radius: 4px;
+}
+
+table.dashboard .control:hover {
+    color: #ffffff;
+    background-color: var(--yos-accent);
+    opacity: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* 16. Usage bars and status colours                                   */
+/* ------------------------------------------------------------------ */
+.usage-bar {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 999px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.usage-bar > span {
+    border-radius: 999px;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+.usage-disk,
+.usage-disk > span:first-child {
+    border-radius: 3px;
+}
+
+.usage-disk > span:first-child {
+    background-color: var(--yos-accent);
+}
+
+.greenbar {
+    background: linear-gradient(to bottom, #5fdc74, #28c940);
+}
+
+.orangebar {
+    background: linear-gradient(to bottom, #ffcf5c, #ffbd2e);
+}
+
+.redbar {
+    background: linear-gradient(to bottom, #ff7b74, #ff5f57);
+}
+
+.graybar {
+    background: linear-gradient(to bottom, #b9b9b9, #a0a0a0);
+}
+
+.green-orb {
+    color: var(--yos-green);
+}
+
+.yellow-orb {
+    color: var(--yos-yellow);
+}
+
+.red-orb {
+    color: var(--yos-red);
+}
+
+.blue-orb {
+    color: var(--yos-accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* 17. Footer: a window status bar                                     */
+/* ------------------------------------------------------------------ */
+#footer {
+    border-top: 1px solid var(--yos-line-strong);
+    background-image: linear-gradient(to bottom, var(--yos-toolbar-top), var(--yos-toolbar-mid));
+    font-size: 1.2rem;
+}
+
+.footer-right,
+#copyright,
+span.bitstream {
+    font-family: var(--yos-font);
+}
+
+/* ------------------------------------------------------------------ */
+/* 18. Dialogs, tooltips, menus                                        */
+/* ------------------------------------------------------------------ */
+.sweet-alert {
+    font-family: var(--yos-font);
+    border-radius: 8px;
+    background-color: var(--yos-window);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 22px 60px rgba(0, 0, 0, 0.4);
+}
+
+.sweet-alert h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--yos-text);
+}
+
+.sweet-alert p {
+    color: var(--yos-text-2);
+}
+
+.sweet-overlay {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+a.info span,
+.clipboard-tooltip {
+    font-variant: normal;
+    border-color: var(--yos-line-strong);
+    border-radius: 5px;
+    background-color: var(--yos-window);
+}
+
+.context-menu,
+.dropdown-menu,
+.ui-dropdownchecklist-dropcontainer {
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.ui-dialog {
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 22px 60px rgba(0, 0, 0, 0.4);
+}
+
+.back_to_top,
+.move_to_end {
+    border-radius: 999px;
+}
